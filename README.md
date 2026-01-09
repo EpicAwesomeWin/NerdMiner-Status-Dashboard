@@ -60,34 +60,21 @@ A comprehensive web-based status dashboard for monitoring NerdMiner devices with
 3. Click "Add Miner"
 4. The miner will appear in the Individual Miners section with live stats
 
-## API Integration
+## How It Works
 
-The dashboard is designed to work with NerdMiner devices. To integrate with real miners:
+The dashboard connects to NerdMiner devices through a Python proxy server:
 
-### Miner API Endpoint
-Replace the `fetchMinerData()` function in `script.js`:
+1. **Frontend** (browser) requests miner data from Python server
+2. **Python server** proxies the request to the NerdMiner device
+3. **HTML scraping** extracts stats from the NerdMiner's web page
+4. **Database** stores historical data for charts and trends
+5. **Auto-refresh** updates every 5 seconds with smart caching
 
-```javascript
-async function fetchMinerData(miner) {
-    const response = await fetch(`http://${miner.ip}/api/status`);
-    return await response.json();
-}
-```
-
-Expected JSON response format:
-```json
-{
-    "status": "online",
-    "hashrate": 295.42,
-    "shares": 1523,
-    "bestDifficulty": 72.978,
-    "temperature": 65,
-    "lastShare": "2026-01-09T04:08:50Z",
-    "uptime": 86400
-}
-```
-
-
+### NerdMiner Compatibility
+- Works with standard NerdMiner firmware web interface
+- No firmware modifications required
+- Scrapes data from the miner's root page (`http://miner.ip/`)
+- Extracts: hashrate, shares, best difficulty, temperature, uptime
 
 ## Configuration
 
