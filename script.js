@@ -2,8 +2,6 @@
 const CONFIG = {
     updateInterval: 5000, // 5 seconds - reduced frequency to ease load on miners
     maxDataPoints: 20,
-    poolUrl: 'pool.nerdminers.org',
-    poolPort: 3333,
     requestTimeout: 20000, // 20 second timeout per request
     maxRetries: 2, // Retry failed requests up to 2 times
     retryDelay: 1000, // 1 second delay between retries
@@ -50,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-let userChartInstance = null;
+
 let totalChartInstance = null;
 let minerCharts = {};
 let isHistoryMode = false;
@@ -82,112 +80,6 @@ function initializeEventListeners() {
     document.getElementById('miner-ip').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') addMiner();
     });
-}
-
-// Pool Configuration
-function updatePoolConfig() {
-    CONFIG.poolUrl = document.getElementById('pool-url').value;
-    CONFIG.poolPort = parseInt(document.getElementById('pool-port').value);
-    console.log('Pool configuration updated:', CONFIG);
-}
-
-// Wallet Search
-async function searchWallet() {
-    const address = document.getElementById('input-address').value.trim();
-    if (!address) {
-        alert('Please enter a Bitcoin address');
-        return;
-    }
-    
-    // Show info message since pool API is disabled
-    document.getElementById('user-stats-info').innerHTML = '<i class="bi-info-circle"></i> Pool API is currently disabled due to reliability issues. Please use the <strong>Total Statistics</strong> section below to view your miners\' combined stats.';
-    document.getElementById('user-stats-info').style.display = 'block';
-    document.getElementById('user-stats-data').style.display = 'none';
-}
-
-async function fetchWalletData(address) {
-    try {
-        // NOTE: Pool APIs are unreliable or unavailable for most NerdMiner pools
-        // Disabled pool API fetching - relying on individual miner data only
-        // If you have a confirmed working pool API, uncomment and configure below
-        
-        /*
-        // Extract wallet address (remove worker name if present)
-        const wallet = address.includes('.') ? address.split('.')[0] : address;
-        
-        // Construct pool API URL based on pool type
-        let poolApiParam;
-        if (CONFIG.poolUrl.includes('public-pool.io')) {
-            poolApiParam = 'public-pool.io:40557';
-        } else if (CONFIG.poolUrl.includes('nerdminer')) {
-            poolApiParam = CONFIG.poolUrl;
-        } else {
-            poolApiParam = CONFIG.poolUrl;
-        }
-        
-        // Fetch from pool API via our proxy
-        const response = await fetch(`/pool-api?wallet=${encodeURIComponent(wallet)}&pool=${encodeURIComponent(poolApiParam)}`);
-        
-        if (!response.ok) {
-            throw new Error(`Pool API returned ${response.status}`);
-        }
-        const poolData = await response.json();
-        console.log('Pool API response:', poolData);
-        
-        // Transform pool API response to our format
-        return {
-            workers: poolData.workersCount || poolData.workers || 0,
-            hashrate: poolData.workersHash || poolData.hashrate || '0',
-            bestShare: poolData.bestDifficulty || poolData.bestDiff || '0',
-            lastShare: poolData.lastShare || 'N/A',
-            poolData: poolData,
-            history: []
-        };
-        */
-        
-        // Skip pool API - return null to rely on individual miner data only
-        return null;
-    } catch (error) {
-        console.error('Error fetching wallet data:', error);
-        // Return null to skip pool data
-        return null;
-    }
-}
-
-function updateUserStats(data) {
-    // If no pool data available, show N/A for all fields
-    if (!data) {
-        document.getElementById('user-stats-workers').textContent = 'N/A';
-        document.getElementById('user-stats-hashrate').textContent = 'N/A (Use Total Stats)';
-        document.getElementById('user-stats-bestshare').textContent = 'N/A';
-        document.getElementById('user-stats-lastshare').textContent = 'Pool API Unavailable';
-        return;
-    }
-    
-    document.getElementById('user-stats-workers').textContent = data.workers;
-    
-    // Handle hashrate - could be a number or string with unit
-    let hashrateDisplay = data.hashrate;
-    if (typeof data.hashrate === 'number') {
-        hashrateDisplay = `${data.hashrate.toFixed(2)} H/s`;
-    } else if (typeof data.hashrate === 'string' && !data.hashrate.includes('H/s')) {
-        hashrateDisplay = `${data.hashrate} H/s`;
-    }
-    document.getElementById('user-stats-hashrate').textContent = hashrateDisplay;
-    
-    document.getElementById('user-stats-bestshare').textContent = data.bestShare;
-    document.getElementById('user-stats-lastshare').textContent = data.lastShare;
-    
-    // Show error message if pool API failed
-    const infoEl = document.getElementById('user-stats-info');
-    if (data.error) {
-        infoEl.textContent = `⚠️ ${data.error} - Using fallback data`;
-        infoEl.style.display = 'block';
-    } else {
-        infoEl.style.display = 'none';
-    }
-    
-    updateUserChart(data.history);
 }
 
 // Miner Management
@@ -306,25 +198,6 @@ function renderMiner(miner) {
 
 // Chart Management
 function initializeCharts() {
-    const userCtx = document.getElementById('user-chart');
-    if (userCtx) {
-        userChartInstance = new Chart(userCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Hashrate (H/s)',
-                    data: [],
-                    borderColor: '#00CFB6',
-                    backgroundColor: 'rgba(0, 207, 182, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: getChartOptions('Hashrate Over Time')
-        });
-    }
-    
     const totalCtx = document.getElementById('total-chart');
     if (totalCtx) {
         totalChartInstance = new Chart(totalCtx, {
@@ -402,14 +275,6 @@ function getChartOptions(title, showLegend = true) {
             }
         }
     };
-}
-
-function updateUserChart(history) {
-    if (!userChartInstance) return;
-    
-    userChartInstance.data.labels = history.map(h => h.time);
-    userChartInstance.data.datasets[0].data = history.map(h => h.hashrate);
-    userChartInstance.update();
 }
 
 function updateMinerChart(minerId, miner) {
