@@ -53,18 +53,6 @@ No server required - runs entirely in the browser!
 3. Click "Add Miner"
 4. The miner will appear in the Individual Miners section with live stats
 
-### Searching Wallet Statistics
-
-1. Enter your Bitcoin address in the "User Status" section
-2. Click "Search Wallet"
-3. View your worker stats, hashrate, and history
-
-### Pool Configuration
-
-1. Enter your preferred pool URL (e.g., pool.nerdminer.org)
-2. Enter the pool port (e.g., 3333)
-3. Changes are applied automatically
-
 ## API Integration
 
 The dashboard is designed to work with NerdMiner devices. To integrate with real miners:
