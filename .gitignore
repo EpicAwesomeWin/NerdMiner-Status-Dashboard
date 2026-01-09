@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Development/Testing files
+test_history.py
+check_db.py
+analyze_firmware.py
+firmware_strings.txt
+Nerdminer_S3_V2.bin
+server_advanced.py
+UPDATES.md
+
+# Deployment builds (exclude generated packages, keep deploy.bat)
+deploy/NerdMiner-Status-*/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

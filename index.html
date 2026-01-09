@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NerdMiner Status Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="header py-4">
+            <div class="container position-relative">
+                <!-- Dark Mode Toggle -->
+                <button class="dark-mode-toggle" id="dark-mode-toggle" title="Toggle dark mode">
+                    <i class="bi-moon-stars-fill"></i>
+                    <span>Dark</span>
+                </button>
+                
+                <h1 class="text-center mb-0">
+                    <i class="bi-cpu"></i> NerdMiner Status Dashboard
+                </h1>
+                <div class="info-note mt-3 mb-0">
+                    <i class="bi-info-circle"></i> Monitor your NerdMiner fleet with real-time stats and graphs
+                </div>
+            </div>
+        </header>
+
+        <!-- Miner Management -->
+        <section id="miner-management" class="miner-management my-4">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Miner Management</h2>
+                    <p class="text-muted small">Add individual miners to monitor their hashrate and performance.</p>
+                </div>
+                <div class="card radius-10 mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                    <div class="col-md-6">
+                        <label for="miner-ip" class="form-label">Miner IP Address</label>
+                        <input type="text" class="form-control" id="miner-ip" 
+                               placeholder="e.g., 192.168.1.32">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="miner-name" class="form-label">Miner Name (Optional)</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="miner-name" 
+                                   placeholder="e.g., NerdMiner-01">
+                            <button class="btn btn-success" id="add-miner">
+                                <i class="bi-plus-circle"></i> Add Miner
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Total Stats -->
+        <section id="total-stats" class="total-stats my-4">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Total Statistics</h2>
+                </div>
+                <div class="chart-container mb-4">
+                    <canvas id="total-chart"></canvas>
+                </div>
+                
+                <!-- History Time Range Selector -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="card radius-10">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                    <h6 class="mb-0"><i class="bi-clock-history"></i> Historical View</h6>
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="timeRange" id="range-live" value="live" checked>
+                                        <label class="btn btn-outline-primary btn-sm" for="range-live">Live</label>
+                                        
+                                        <input type="radio" class="btn-check" name="timeRange" id="range-1h" value="1">
+                                        <label class="btn btn-outline-primary btn-sm" for="range-1h">1h</label>
+                                        
+                                        <input type="radio" class="btn-check" name="timeRange" id="range-6h" value="6">
+                                        <label class="btn btn-outline-primary btn-sm" for="range-6h">6h</label>
+                                        
+                                        <input type="radio" class="btn-check" name="timeRange" id="range-24h" value="24">
+                                        <label class="btn btn-outline-primary btn-sm" for="range-24h">24h</label>
+                                        
+                                        <input type="radio" class="btn-check" name="timeRange" id="range-7d" value="168">
+                                        <label class="btn btn-outline-primary btn-sm" for="range-7d">7d</label>
+                                        
+                                        <input type="radio" class="btn-check" name="timeRange" id="range-30d" value="720">
+                                        <label class="btn btn-outline-primary btn-sm" for="range-30d">30d</label>
+                                    </div>
+                                </div>
+                                <small class="text-muted d-block mt-2" id="history-status">Showing live data - updates every 5 seconds</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row row-cols-1 row-cols-md-5">
+                    <div class="col mb-3">
+                        <div class="card radius-10 border-start border-0 border-3 border-primary">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Total Miners</p>
+                                        <h4 class="my-1 text-primary" id="total-miners">0</h4>
+                                    </div>
+                                    <div class="widgets-icons-2 rounded-circle bg-gradient-cosmic text-white ms-auto">
+                                        <i class="bi-hdd-network"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <div class="card radius-10 border-start border-0 border-3 border-success">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Total Hashrate</p>
+                                        <h4 class="my-1 text-success" id="total-hashrate">0 H/s</h4>
+                                    </div>
+                                    <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
+                                        <i class="bi-speedometer2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <div class="card radius-10 border-start border-0 border-3 border-info">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Active Miners</p>
+                                        <h4 class="my-1 text-info" id="active-miners">0</h4>
+                                    </div>
+                                    <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
+                                        <i class="bi-power"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <div class="card radius-10 border-start border-0 border-3 border-danger">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Offline Miners</p>
+                                        <h4 class="my-1 text-danger" id="offline-miners">0</h4>
+                                    </div>
+                                    <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                                        <i class="bi-x-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <div class="card radius-10 border-start border-0 border-3 border-warning">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <p class="mb-0 text-secondary">Total Accepted Shares</p>
+                                        <h4 class="my-1 text-warning" id="total-accepted">0</h4>
+                                    </div>
+                                    <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto">
+                                        <i class="bi-check-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Individual Miners -->
+        <section id="miners-list" class="miners-list my-4">
+            <div class="container">
+                <div class="section-title d-flex justify-content-between align-items-center">
+                    <h2>Individual Miners</h2>
+                    <div class="sort-controls">
+                        <label class="me-2">Sort by:</label>
+                        <select id="sort-miners" class="form-select form-select-sm d-inline-block" style="width: auto;">
+                            <option value="name">Name</option>
+                            <option value="ip">IP Address</option>
+                            <option value="hashrate">Hashrate</option>
+                            <option value="status">Status</option>
+                            <option value="added">Date Added</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="miners-container" class="row">
+                    <!-- Miners will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-1">
+                        <strong>NerdMiner Status Dashboard</strong> v1.0.0
+                    </p>
+                    <p class="small text-muted mb-0">
+                        Monitor your NerdMiner fleet with real-time stats and graphs
+                    </p>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <p class="mb-2"><strong>Support This Project</strong></p>
+                    <div class="d-flex flex-column gap-2 align-items-center">
+                        <a href="https://www.buymeacoffee.com/EpicAwesomeWin" target="_blank" class="btn btn-sm btn-outline-warning donate-btn">
+                            <i class="bi-cup-hot"></i> Buy Me a Coffee
+                        </a>
+                        <a href="https://www.paypal.com/paypalme/EpicAwesomeWin" target="_blank" class="btn btn-sm btn-outline-primary donate-btn">
+                            <i class="bi-paypal"></i> PayPal
+                        </a>
+                        <a href="https://www.patreon.com/EpicAwesomeWin" target="_blank" class="btn btn-sm btn-outline-danger donate-btn">
+                            <i class="bi-heart-fill"></i> Patreon
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <p class="mb-1">
+                        Created by <a href="https://theden.se" target="_blank" class="footer-link">Theden.se</a>
+                    </p>
+                    <p class="small text-muted mb-0">
+                        <i class="bi-github"></i> Open source project
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
