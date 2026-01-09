@@ -4,19 +4,7 @@ A comprehensive web-based status dashboard for monitoring NerdMiner devices with
 
 ## Features
 
-### 🔧 Pool Configuration
-- Configure custom mining pool URL and port
-- Default: pool.nerdminer.org:3333
-- Easy switching between different pools
-
-### 👤 Wallet Search
-- Search for Bitcoin wallet address statistics
-- View worker count, hashrate, and best difficulty
-- Real-time hashrate graph
-- Last share submission timestamp
-- Inspired by pool.nerdminer.org user status interface
-
-### 🖥️ Individual Miner Management
+### ️ Individual Miner Management
 - Add miners by IP address (e.g., 192.168.1.32)
 - Custom miner names for easy identification
 - Real-time status monitoring (online/offline)
