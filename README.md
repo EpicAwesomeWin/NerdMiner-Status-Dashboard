@@ -23,7 +23,7 @@ A comprehensive web-based status dashboard for monitoring NerdMiner devices with
 - Aggregated hashrate graph
 
 ### ⚡ Auto-Update System
-- Automatic data refresh every 3 seconds
+- Automatic data refresh every 5 seconds
 - Real-time chart updates
 - Smooth animations without page reload
 - Maintains up to 20 data points per chart
@@ -120,7 +120,7 @@ Requires a modern browser with ES6+ support.
 ## Features in Detail
 
 ### Real-time Monitoring
-- Data refreshes every 3 seconds
+- Data refreshes every 5 seconds
 - Charts update smoothly without animation lag
 - Status badges update instantly
 
@@ -163,8 +163,8 @@ Extend the miner object in `script.js` and update the UI accordingly.
 
 ### Miners Not Updating
 - Check if miner IPs are accessible from your network
-- Verify CORS settings on miner devices
-- Check browser console for errors
+- Verify miners are powered on and connected to WiFi
+- Check server console and browser console for errors
 
 ### Charts Not Displaying
 - Ensure Chart.js CDN is accessible
@@ -184,5 +184,5 @@ This project is provided as-is for use with NerdMiner devices.
 
 For issues or questions:
 1. Check the browser console for errors
-2. Verify API endpoints are configured correctly
+2. Check the server console for connection errors
 3. Ensure network connectivity to miners
