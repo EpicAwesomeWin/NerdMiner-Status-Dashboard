@@ -199,13 +199,3 @@ For issues or questions:
 1. Check the browser console for errors
 2. Verify API endpoints are configured correctly
 3. Ensure network connectivity to miners
-
-## Future Enhancements
-
-- [ ] Export statistics to CSV
-- [ ] Email/notification alerts for offline miners
-- [x] Historical data storage (completed)
-- [ ] Configurable data retention period
-- [ ] Power consumption tracking
-- [ ] Custom chart time ranges
-- [ ] Multiple dashboard themes
