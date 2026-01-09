@@ -1,6 +1,6 @@
 # NerdMiner Status Dashboard
 
-A comprehensive web-based status dashboard for monitoring NerdMiner devices with real-time updates, pool integration, and individual miner tracking.
+A comprehensive web-based status dashboard for monitoring NerdMiner devices with real-time updates, historical data tracking, and individual miner management.
 
 ## Features
 
@@ -28,21 +28,28 @@ A comprehensive web-based status dashboard for monitoring NerdMiner devices with
 - Smooth animations without page reload
 - Maintains up to 20 data points per chart
 
-### 💾 Data Persistence
-- Miners saved to browser local storage
-- Auto-load saved miners on page refresh
-- Persistent configuration across sessions
+### 💾 Historical Data Tracking
+- SQLite database for persistent storage
+- 30-day historical data retention
+- Automatic cleanup of old records
+- Performance metrics and trend analysis
 
 ## Installation
 
-1. Download all files to a directory:
-   - `index.html`
-   - `styles.css`
-   - `script.js`
+### Windows Quick Start
+1. Double-click `SETUP.bat`
+2. Double-click `START.bat`
+3. Open browser to `http://localhost:8000`
 
-2. Open `index.html` in a modern web browser
+### Manual Setup
+1. Ensure Python 3.8+ is installed
+2. Run `python init_database.py` (if using deployment package)
+3. Run `python server.py` (default port 8000)
+4. Open browser to `http://localhost:8000`
 
-No server required - runs entirely in the browser!
+### Custom Port
+- Run `python server.py 3000` for custom port
+- Or use `START.bat` which prompts for port selection
 
 ## Usage
 
@@ -80,42 +87,19 @@ Expected JSON response format:
 }
 ```
 
-### Pool API Endpoint
-Replace the `fetchWalletData()` function in `script.js`:
 
-```javascript
-async function fetchWalletData(address) {
-    const response = await fetch(`http://${CONFIG.poolUrl}/api/user/${address}`);
-    return await response.json();
-}
-```
-
-Expected JSON response format:
-```json
-{
-    "workers": 3,
-    "hashrate": 886.25,
-    "bestShare": 72.978,
-    "lastShare": "2026-01-09 04:08:50",
-    "history": [
-        {"time": "12:00:00", "hashrate": 850.5},
-        {"time": "12:01:00", "hashrate": 886.25}
-    ]
-}
-```
 
 ## Configuration
 
-Edit the `CONFIG` object in `script.js` to customize:
+### Server Configuration
+- Default port: 8000
+- Change via command line: `python server.py [port]`
+- Or use START.bat for interactive port selection
 
-```javascript
-const CONFIG = {
-    updateInterval: 3000,    // Update interval in milliseconds (3 seconds)
-    maxDataPoints: 20,       // Maximum data points to show in charts
-    poolUrl: 'pool.nerdminer.org',
-    poolPort: 3333
-};
-```
+### Data Retention
+- Historical data stored in SQLite database
+- Automatic cleanup of records older than 30 days
+- 5-second cache duration to reduce ESP32 load
 
 ## Browser Compatibility
 
@@ -128,12 +112,23 @@ Requires a modern browser with ES6+ support.
 
 ## Technologies Used
 
+### Frontend
 - **HTML5** - Structure
-- **CSS3** - Styling with custom properties
-- **JavaScript (ES6+)** - Logic and data handling
+- **CSS3** - Styling with dark mode support
+- **JavaScript (ES6+)** - Client-side logic
 - **Bootstrap 5.3** - UI framework
 - **Bootstrap Icons** - Icon set
 - **Chart.js 4.4** - Data visualization
+
+### Backend
+- **Python 3.8+** - Server (standard library only)
+- **SQLite3** - Database for historical tracking
+- **HTTP Server** - Built-in Python server
+
+### Zero External Dependencies
+- No pip install required
+- Uses only Python standard library
+- Lightweight and portable
 
 ## Features in Detail
 
@@ -154,9 +149,10 @@ Requires a modern browser with ES6+ support.
 - Hover effects for better UX
 
 ### Data Management
-- Local storage for persistence
-- Automatic cleanup of old data points
-- Efficient chart updates
+- SQLite database with automatic schema creation
+- 30-day rolling data retention
+- Efficient indexing for fast queries
+- Real-time chart updates with caching
 
 ## Customization
 
@@ -189,9 +185,9 @@ Extend the miner object in `script.js` and update the UI accordingly.
 - Verify canvas elements exist in DOM
 
 ### Data Not Persisting
-- Check if browser allows local storage
-- Verify no browser extensions blocking storage
-- Clear browser cache and reload
+- Ensure database file has write permissions
+- Check server console for database errors
+- Verify `nerdminer_history.db` file exists
 
 ## License
 
@@ -208,7 +204,8 @@ For issues or questions:
 
 - [ ] Export statistics to CSV
 - [ ] Email/notification alerts for offline miners
-- [ ] Historical data storage
-- [ ] Multi-pool support
+- [x] Historical data storage (completed)
+- [ ] Configurable data retention period
 - [ ] Power consumption tracking
-- [ ] Profitability calculator
+- [ ] Custom chart time ranges
+- [ ] Multiple dashboard themes
